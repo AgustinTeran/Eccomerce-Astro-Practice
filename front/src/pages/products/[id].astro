@@ -1,0 +1,37 @@
+---
+import type { GetStaticPaths } from "astro";
+import Layout from "../../layouts/Layout.astro";
+import { getUsers } from "../../requests/users";
+
+
+
+
+  
+
+export const getStaticPaths = (async() => {
+
+  var users = await getUsers()
+
+  return users.rows.map(e => ({
+    params: {id: e.id},
+    props: {name: e.name,email: e.email,role: e.role},
+    falback: false
+  }))
+
+}) satisfies GetStaticPaths;
+
+
+var {id} = Astro.params
+var {name,email,role} = Astro.props
+
+
+---
+
+<Layout title="User">
+  <div transition:name={`user-${id}`} class="flex ml-10 flex-col items-center p-5 w-fit rounded-md border border-primary">
+    <h1 class="text-4xl">{name}</h1>
+    <h2 class="text-3xl" >{email}</h2>
+    <h2 class={`text-2xl ${role == "admin" ? "text-orange-500" : "text-green-500"}`}>{role}</h2>
+  </div>
+</Layout>
+

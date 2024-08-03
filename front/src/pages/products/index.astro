@@ -1,0 +1,29 @@
+---
+import Toastify from "../../components/commons/Toastify";
+import Layout from "../../layouts/Layout.astro";
+import {getProducts} from "../../requests/products"
+
+var products = await getProducts()
+console.log(products)
+
+---
+
+
+<Layout title="Products">
+  <Toastify error={products.error} type={undefined} client:load />
+  <h2 class="text-3xl mb-5">Products</h2>
+  <div class="flex gap-5 flex-wrap justify-center">
+    {
+      products?.rows?.map(e => (
+        <a transition:name={`user-${e.id}`} href={`/products/${e.id}`} class="flex flex-col items-center p-5 w-fit rounded-md border border-primary">
+          <span>{e.name}</span>
+          <span>{e.email}</span>
+          <span>{e.role}</span>
+        </a>
+      ))
+    }
+    {
+      products.error && <p class="text-red-500 text-3xl">There was an error</p>
+    }
+  </div>
+</Layout>

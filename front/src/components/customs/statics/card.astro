@@ -1,0 +1,14 @@
+---
+var {iconName,name} = Astro.props;
+let Icon;
+try {
+  Icon = (await import(`../../../assets/icons/${iconName}.astro`)).default;
+} catch (e) {
+  Icon = null;
+}
+---
+
+<div class="bg-white rounded-lg shadow-md p-3 gap-1 text-2xl flex flex-col items-center justify-center cursor-pointer hover:opacity-55">
+  {Icon ? <Icon class="w-40 h-40"/> : <div class="w-40 h-40 bg-gray-200 rounded"></div>}
+  <span class="font-medium">{name}</span>
+</div>

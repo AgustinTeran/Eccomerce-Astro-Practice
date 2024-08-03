@@ -1,0 +1,51 @@
+---
+// CON ESTO DECIMOS QUE SE RENDERIZA EN EL SERVIDOR, NO DE FORMA ESTATICA
+export const prerender = false;
+
+// AL ESTAR RENDERIZANDO EN EL SERVIDOR, SE PUEDE USAR COOKIES
+var theme = Astro.cookies.get("theme")?.value;
+console.log("Theme en las cookies: ",theme)
+
+import ReactComponent from "../components/customs/client/reactComponent"
+import Layout from "../layouts/Layout.astro";
+
+---
+<Layout title="About">
+  <h4 data-theme={theme || "myTheme"} class="text-red-500 text-2xl">Estas en el About</h4>
+  <p>Lorem ipsum dolor sit, amet consectetur adipisicing elit. Veritatis, qui blanditiis quibusdam, ea repudiandae, cumque facere eveniet quis et maiores rem sint quam magni. Doloribus exercitationem culpa dignissimos inventore aspernatur</p>
+  <ReactComponent client:load/>
+  <button id="btn" class="bg-base-content border border-black rounded p-3 text-base-100">Cambiar</button>
+</Layout>
+<script>
+  var btn = document.querySelector("#btn")
+  
+
+  function getCookie(name) {
+      const value = `; ${document.cookie}`;
+      const parts = value.split(`; ${name}=`);
+      if (parts.length === 2) return parts.pop().split(';').shift();
+  }
+
+  // Función para establecer una cookie
+  function setCookie(name, value, days) {
+    let expires = "";
+    if (days) {
+        const date = new Date();
+        date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+        expires = "; expires=" + date.toUTCString();
+    }
+    document.cookie = name + "=" + (value || "") + expires + "; path=/";
+
+    // Verificar si la cookie se ha establecido o modificado correctamente
+    return getCookie(name) === value;
+}
+
+var currentTheme = getCookie("theme");
+  console.log({btn,currentTheme});
+  
+  btn.addEventListener("click", () => {
+    console.log("Clicked")
+    console.log(setCookie("theme", currentTheme === "myDark"? "myTheme" : "myDark", 1));
+     
+  })
+</script>

@@ -1,0 +1,16 @@
+---
+import Layout from '../layouts/Layout.astro';
+import HomeSlider from "../components/customs/statics/homeSlider.astro";
+import HomeCategories from "../components/customs/statics/homeCategories.astro";
+import HomeBrands from "../components/customs/statics/homeBrands.astro";
+---
+
+<Layout title="Welcome to Astro.">
+	<HomeSlider/>
+  <article class="h-80 mb-8 flex flex-col items-center justify-center border-2 border-blue-500">
+    <span>Acá va a ir un slider de productos mas vendidos/mas recomendados</span>
+  </article>
+	<HomeCategories/>
+	<HomeBrands/>
+  
+</Layout>

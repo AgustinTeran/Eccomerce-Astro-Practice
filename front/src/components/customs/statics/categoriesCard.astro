@@ -1,0 +1,9 @@
+---
+var {id,icon,name} = Astro.props;
+
+---
+
+<a href={`/products/${id}`} class="bg-white rounded-lg shadow-md p-3 gap-1 text-2xl flex flex-col items-center justify-center cursor-pointer hover:opacity-55">
+  <img src={icon} alt={`${name} icon`} class="w-40 h-40" />
+  <span class="font-medium">{name}</span>
+</a>

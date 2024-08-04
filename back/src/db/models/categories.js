@@ -13,7 +13,7 @@ module.exports = (s) => {
       type: DataTypes.STRING,
       allowNull: false
     },
-    iconName: {
+    icon: {
       type: DataTypes.STRING,
       allowNull: true
     }

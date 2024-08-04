@@ -6,8 +6,10 @@ var authMiddleware = require("../middlewares/auth")
 
 router.get("/",async(req,res) => {
   try {
-    var {offset,limit=15,orderBy="updatedAt",order="DESC",search,attributes,parentCategory=null} = req.query
+    var {offset,limit=999999999999,orderBy="updatedAt",order="DESC",search,attributes,parentCategory=null,showProducts=false} = req.query
 
+    console.log(showProducts,"as",limit);
+    
     if(typeof attributes === "string"){
       attributes = [attributes]
     }
@@ -25,14 +27,30 @@ router.get("/",async(req,res) => {
         ]
       }
     }
-    
+
+    if(parentCategory){
+      var where = {
+        [Op.and]: [
+          { parent_category: parentCategory },
+        ]
+      }
+    }
+
+    if(showProducts){
+      var include = {
+        model: sequelize.models.products,
+        attributes: ["id","name","price","image1"],
+        }
+      }
 
     res.send(await sequelize.models.categories.findAndCountAll({
       order: [[orderBy, order]],
       offset: offset && Number(offset),
       limit: Number(limit),
       where,
-      attributes
+      attributes,
+      include,
+      distinct: true,
     }))
     // res.send(await sequelize.models.categories.findAll())
   } catch (error) {

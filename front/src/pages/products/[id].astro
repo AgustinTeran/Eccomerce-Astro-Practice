@@ -1,37 +1,36 @@
 ---
 import type { GetStaticPaths } from "astro";
 import Layout from "../../layouts/Layout.astro";
-import { getUsers } from "../../requests/users";
+import { getCategories } from "../../requests/categories";
+import ProductsCard from "../../components/customs/statics/productsCard.astro";
 
+var {id} = Astro.params
+var {productsFilteredByCategory,name} = Astro.props
 
-
-
-  
 
 export const getStaticPaths = (async() => {
 
-  var users = await getUsers()
+var categories = await getCategories(null,null,null,null,true)
 
-  return users.rows.map(e => ({
-    params: {id: e.id},
-    props: {name: e.name,email: e.email,role: e.role},
-    falback: false
-  }))
+
+return categories.rows.map(e => ({
+  params: {id: e.id},
+  props: {name: e.name, productsFilteredByCategory: e.products},
+  falback: false
+}))
 
 }) satisfies GetStaticPaths;
-
-
-var {id} = Astro.params
-var {name,email,role} = Astro.props
-
-
 ---
 
-<Layout title="User">
-  <div transition:name={`user-${id}`} class="flex ml-10 flex-col items-center p-5 w-fit rounded-md border border-primary">
-    <h1 class="text-4xl">{name}</h1>
-    <h2 class="text-3xl" >{email}</h2>
-    <h2 class={`text-2xl ${role == "admin" ? "text-orange-500" : "text-green-500"}`}>{role}</h2>
-  </div>
-</Layout>
 
+<Layout title="Product">
+  <h3>Products filtered by category {name}</h3>
+  <div class="flex flex-wrap justify-center gap-4">
+    {
+      productsFilteredByCategory.map(e => (
+      <ProductsCard id={e.id} name={e.name} image1={e.image1} price={e.price} />
+      ))
+    }
+  </div>
+ 
+</Layout>

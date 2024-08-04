@@ -1,7 +1,7 @@
 ---
 import { getCategories } from "../../../requests/categories"
 import Toastify from "../../commons/Toastify"
-import Card from "../../customs/statics/card.astro"
+import Card from "./categoriesCard.astro"
 
 
 var categories = await getCategories()
@@ -13,9 +13,11 @@ var categories = await getCategories()
   <div class="grid grid-cols-[repeat(auto-fit,minmax(200px,1fr))] gap-5 items-center justify-center w-full p-5">
     {
       categories?.rows?.map((category,i) => {
-        return (
-        <Card iconName={category.iconName} name={category.name}/>
-      )
+        if(!category.parent_category){
+          return (
+            <Card id={category.id} icon={category.icon} name={category.name}/>
+          )
+        }
       })
     }
   </div>

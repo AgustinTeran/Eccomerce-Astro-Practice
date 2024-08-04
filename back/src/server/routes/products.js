@@ -6,7 +6,7 @@ var authMiddleware = require("../middlewares/auth")
 
 router.get("/",async(req,res) => {
   try {
-    var {offset,limit=15,orderBy="updatedAt",order="DESC",search,attributes} = req.query
+    var {offset,limit=15,orderBy="updatedAt",order="DESC",search,attributes,category=null} = req.query
 
     if(typeof attributes === "string"){
       attributes = [attributes]
@@ -20,12 +20,22 @@ router.get("/",async(req,res) => {
       }
     }
 
+    if(category){
+      var categoriesWhere = {
+        [Op.or]: [
+          { id: category },
+          { parent_category: category },
+        ]
+      }
+    }
+
     res.send(await sequelize.models.products.findAndCountAll({
       order: [[orderBy, order]],
       offset: offset && Number(offset),
       limit: Number(limit),
       include: {
         model: sequelize.models.categories,as: "categories",
+        where: categoriesWhere,
       },
       distinct: true,
       where
@@ -45,18 +55,18 @@ router.get("/:id",async(req,res) => {
   }
 })
 
-router.put("/:id",authMiddleware,async(req,res) => {
+router.put("/:id"/* ,authMiddleware */,async(req,res) => {
   try {
-    var userTokenID = await sequelize.models.users.findByPk(req.user.id)
+    // var userTokenID = await sequelize.models.users.findByPk(req.user.id)
 
-    if(userTokenID.role === "admin"){
+    // if(userTokenID.role === "admin"){
       var {id} = req.params
 
       await sequelize.models.products.update(req.body,{where: {id}})
       res.send(await sequelize.models.products.findByPk(id))
-    }else{
-      res.status(401).send({message: "No autorizado",status:401})
-    }
+    // }else{
+    //   res.status(401).send({message: "No autorizado",status:401})
+    // }
   } catch (error) {
     res.status(404).send({message: error.message,status:404})
   }

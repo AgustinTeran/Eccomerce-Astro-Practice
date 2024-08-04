@@ -1,8 +1,8 @@
 import backUrl from ".";
 
-export async function getProducts(offset,limit,order,search,category){
+export async function getBrands(offset,limit,order,search){
 
-  var result = await backUrl.get(`/products`,{offset: 20,limit,order,search,category})
+  var result = await backUrl.get(`/brands`,{offset: 20,limit,order,search})
     .then(res => res.data)
     .catch(err => ({error:err.response?.data || {message: "Could not make the request, server down"}}))
 
@@ -10,8 +10,8 @@ export async function getProducts(offset,limit,order,search,category){
 }
 
 
-export async function getProduct(id){
-  var result = await backUrl.get(`/products/${id}`)
+export async function getBrand(id){
+  var result = await backUrl.get(`/brands/${id}`)
     .then(res => res.data)
     .catch(err => ({error:err.response?.data || {message: "Could not make the request, server down"}}))
 
@@ -19,24 +19,24 @@ export async function getProduct(id){
 }
 
 
-export async function updateProduct(id,data){
-  var result = await backUrl.put(`/products/${id}`,data,{headers: {token: cookies().get("token")?.value}})
+export async function updateBrand(id,data){
+  var result = await backUrl.put(`/brands/${id}`,data,{headers: {token: cookies().get("token")?.value}})
     .then(res => res.data)
     .catch(err => ({error:err.response?.data || {message: "Could not make the request, server down"}}))
 
     return result
 }
 
-export async function createProduct(data){
-  var result = await backUrl.post(`/products/`,data,{headers: {token: cookies().get("token")?.value}})
+export async function createBrand(data){
+  var result = await backUrl.post(`/brands/`,data,{headers: {token: cookies().get("token")?.value}})
     .then(res => res.data)
     .catch(err => ({error:err.response?.data || {message: "Could not make the request, server down"}}))
 
     return result
 }
 
-export async function deleteProduct(id){
-  var result = await backUrl.delete(`/products/${id}`,{headers: {token: cookies().get("token")?.value}})
+export async function deleteBrand(id){
+  var result = await backUrl.delete(`/brands/${id}`,{headers: {token: cookies().get("token")?.value}})
     .then(res => res.data)
     .catch(err => ({error:err.response?.data || {message: "Could not make the request, server down"}}))
 

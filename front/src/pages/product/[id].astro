@@ -1,0 +1,34 @@
+---
+import type { GetStaticPaths } from "astro";
+import Layout from "../../layouts/Layout.astro";
+import { getProducts } from "../../requests/products";
+
+var {id} = Astro.params
+var {name,price,image1,image2,image3,description,categories,/* brands */} = Astro.props
+
+
+export const getStaticPaths = (async() => {
+
+var products = await getProducts()
+
+return products.rows.map(e => ({
+  params: {id: e.id},
+  props: {name: e.name,price: e.price,image1: e.image1,image2: e.image2,image3: e.image3 ,description: e.description,categories: e.categories.map(c => ({id: c.id,name: c.name})),/* brands: e.brand.map(b => ({id: b.id,name: b.name})) */},
+  falback: false
+}))
+
+}) satisfies GetStaticPaths;
+---
+
+
+<Layout title="Product">
+  <h1>Product {id}</h1>
+  <span>Name: {name}</span>
+  <span>Price: {price}</span>
+  <img class="size-56" src={image1} alt="Image1"/>
+  <img class="size-56" src={image2} alt="Image2"/>
+  <img class="size-56" src={image3} alt="Image3"/>
+  <span>Description: {description}</span>
+  <span>Categories: {JSON.stringify(categories)}</span>
+  <!-- <span>Brands: {JSON.stringify(brands)}</span> -->
+</Layout>
